@@ -42,7 +42,7 @@ A Laravel-based RESTful API for managing event ticket reservations, allowing use
     ```
 
 3. **Run database migrations and seed events**
-    - ps: If you have postgres intalled locally you can run the seeder and migrations without enter the docker shell,
+    - ps: If you have postgres intalled locally you can run the seeder and migrations without enter the docker shell.
 
     ```bash
     docker exec -it event-tickets-reservation-api_app_1 bash
