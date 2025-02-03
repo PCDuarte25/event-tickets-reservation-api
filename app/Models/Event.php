@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  *   A brief description of the event.
  * @property string $date
  *   The date of the event.
- * @property int $availabe_tickets
+ * @property int $available_tickets
  *   The number of tickets available for the event.
  */
 class Event extends Model
