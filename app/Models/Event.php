@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\NotEnoughTicketsException;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,4 +27,20 @@ class Event extends Model
      * @var array
      */
     protected $fillable = ['name', 'description', 'date', 'available_tickets'];
+
+    /**
+     * Ensure there are enough tickets on the event available for a reservation.
+     *
+     * @param int $requestedTickets
+     *   The number of tickets requested.
+     *
+     * @throws \App\Exceptions\NotEnoughTicketsException
+     *   Thrown when there are not enough tickets available.
+     */
+    public function ensureTicketsAvailability(int $requestedTickets)
+    {
+        if ($this->available_tickets < $requestedTickets) {
+            throw new NotEnoughTicketsException('There are no more tickets available for this event.');
+        }
+    }
 }
