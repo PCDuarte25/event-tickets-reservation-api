@@ -41,6 +41,9 @@ A Laravel-based RESTful API for managing event ticket reservations, allowing use
     docker-compose up -d
     ```
 
+    * **Why Export UID/GID?**
+    This Docker setup is optimized for local development and requires specific user permissions to avoid filesystem conflicts.
+
 3. **Run database migrations and seed events**
     - ps: If you have postgres intalled locally you can run the seeder and migrations without enter the docker shell.
 
