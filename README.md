@@ -58,22 +58,22 @@ The API will be available at `http://localhost:8000`
 ### Events
 
 - List all events
-* `GET /api/events`
+    * `GET /api/events`
 - list a specific event by a given ID
-* GET /api/events/{event_id}`
+    * `GET /api/events/{event_id}`
 
 ### Reservations
 
 - Create a reservation for an event
-* `POST /api/events/{event_id}/reservations`
-* **body**: `{ "tickets": 2 }`
+    * `POST /api/events/{event_id}/reservations`
+    * **body**: `{ "tickets": 2 }`
 
 - Update ticket count in a reservation
-* `PUT /api/events/{event_id}/reservations/{reservation_id}`
-* **body**: `{ "tickets": 2 }`
+    * `PUT /api/events/{event_id}/reservations/{reservation_id}`
+    * **body**: `{ "tickets": 2 }`
 
 - Cancel a reservation
-* `DELETE /api/events/{event_id}/reservations/{reservation_id}`
+    * `DELETE /api/events/{event_id}/reservations/{reservation_id}`
 
 ### Responses:
 - `200` Success
