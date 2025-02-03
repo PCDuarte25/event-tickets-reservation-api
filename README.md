@@ -81,7 +81,7 @@ The API will be available at `http://localhost:8000`
 - `404` Resource not found
 - `422` Insufficient tickets
 
-## Testing bonus:
+## Bonus test:
 Run the concurrency test to verify reservation integrity
 
 ```bash
