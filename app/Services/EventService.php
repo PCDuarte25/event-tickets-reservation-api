@@ -23,15 +23,19 @@ class EventService implements EventServiceInterface
     public function createReservation(ReservationCreateDto $reservationCreateDto): Reservation
     {
         return DB::transaction(function() use ($reservationCreateDto) {
+            // Lock the event record for writing to prevent concurrent updates
             $event = $this->getLockedEvent($reservationCreateDto->event);
 
+            // Check if the event have enough tickets.
             $event->ensureTicketsAvailability($reservationCreateDto->tickets);
 
+            // Create the reservation.
             $reservation = Reservation::create([
                 'event_id' => $event->id,
                 'tickets' => $reservationCreateDto->tickets,
             ]);
 
+            // Update the amount of tickets.
             $event->decrement('available_tickets', $reservationCreateDto->tickets);
 
             return $reservation;
@@ -44,20 +48,32 @@ class EventService implements EventServiceInterface
     public function changeReservationTickets(ReservationUpdateDto $reservationUpdateDto): Reservation
     {
         return DB::transaction(function() use ($reservationUpdateDto) {
+            // Lock the event record for writing to prevent concurrent updates.
             $event = $this->getLockedEvent($reservationUpdateDto->event);
 
+            // Reload reservation to get the latest state.
             $reservation = $reservationUpdateDto->reservation->fresh();
 
+            // Verify the reservation belongs to the specified event.
             $this->ensureEventContainsReservation($event, $reservation);
 
+            // Calculate difference between requested tickets and current reservation.
+            // Example:
+            // - Current reservation: 10 tickets | Requested: 12 tickets => Difference: +2 (addition)
+            // - Current reservation: 10 tickets | Requested: 8 tickets  => Difference: -2 (removal).
             $ticketsDiff = $reservationUpdateDto->tickets - $reservation->tickets;
 
+            // If adding tickets, verify event availability.
             if ($ticketsDiff > 0) {
                 $event->ensureTicketsAvailability($ticketsDiff);
             }
 
+            // Update event's available tickets:
+            // - For additions: subtract difference from available (10 available - 2 = 8)
+            // - For removals: add absolute value of difference (10 available - (-2) = 12).
             $event->decrement('available_tickets', $ticketsDiff);
 
+            // Update reservation with new ticket count and persist.
             $reservation->tickets = $reservationUpdateDto->tickets;
             $reservation->save();
 
@@ -71,12 +87,16 @@ class EventService implements EventServiceInterface
     public function cancelReservation(ReservationCancelDto $reservationCancelDto): bool
     {
         return DB::transaction(function() use ($reservationCancelDto) {
+            // Lock the event record for writing to prevent concurrent updates.
             $event = $this->getLockedEvent($reservationCancelDto->event);
 
+            // Reload reservation to get the latest state.
             $reservation = $reservationCancelDto->reservation->fresh();
 
+            // Verify the reservation belongs to the specified event.
             $this->ensureEventContainsReservation($event, $reservation);
 
+            // Update the amount of tickets.
             $event->increment('available_tickets', $reservation->tickets);
 
             return $reservation->delete();
