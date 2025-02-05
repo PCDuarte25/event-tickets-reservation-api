@@ -58,10 +58,14 @@ The API will be available at `http://localhost:8000`
 
 - List all events
     * `GET /api/events`
+
 - list a specific event by a given ID
     * `GET /api/events/{event_id}`
 
 ### Reservations
+
+- List all reservations from an event.
+    * `GET /api/events/{event_id}/reservations`
 
 - Create a reservation for an event
     * `POST /api/events/{event_id}/reservations`
