@@ -64,7 +64,7 @@ The API will be available at `http://localhost:8000`
 
 ### Reservations
 
-- List all reservations from an event.
+- List all reservations from an event
     * `GET /api/events/{event_id}/reservations`
 
 - Create a reservation for an event
